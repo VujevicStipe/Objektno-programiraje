@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
@@ -6,8 +6,8 @@
 
 using namespace std;
 
-void prevodi(vector<string>& vektor, int n) {
-    cout << "Unesite rečenice" << endl;
+void prevodenje(vector<string>& vektor, int n) {
+    cout << "Unesi recenice" << endl;
     cin.ignore();
 
     for (int i = 0; i < n; i++) {
@@ -17,55 +17,46 @@ void prevodi(vector<string>& vektor, int n) {
     }
 
     srand(static_cast<unsigned int>(time(nullptr)));
-    int nasumicno = rand() % n;
+    int random = rand() % n;
 
-    cout << "Nasumičan broj je: " << nasumicno << endl;
-    cout << "Nasumična rečenica je: " << vektor[nasumicno] << endl;
+    cout << "Random broj je: " << random << endl;
+    cout << "Random string je: " << vektor[random] << endl;
 
-    auto tempVektor = vektor[nasumicno];
+    auto vektorFinal = vektor[random];
+
     string dodatakSamoglasnik = "hay";
     string dodatakSuglasnik = "ay";
-    string samoglasnici = "aeiouAEIOU";
 
-    char cilj = ' ';
-    size_t pozicija = 0;
-
-    while (pozicija != string::npos) {
-        string trenutnaRijec = "";
-        size_t pocetakRijeci = pozicija;
-        while (pozicija != string::npos && isalpha(tempVektor[pozicija])) {
-            trenutnaRijec += tempVektor[pozicija];
-            pozicija++;
-        }
-
-        if (!trenutnaRijec.empty()) {
-            char prvoSlovo = tolower(trenutnaRijec[0]);
-            if (samoglasnici.find(prvoSlovo) != string::npos) {
-                tempVektor.insert(pocetakRijeci, dodatakSamoglasnik);
-                pozicija += dodatakSamoglasnik.length();
-            }
-            else {
-                tempVektor.insert(pocetakRijeci, dodatakSuglasnik);
-                pozicija += dodatakSuglasnik.length();
-            }
+    string rijec;
+    for (size_t i = 0; i < vektorFinal.length(); i++) {
+        if (isalpha(vektorFinal[i])) {
+            rijec += vektorFinal[i];
         }
         else {
-            pozicija = tempVektor.find(cilj, pozicija + 1);
+            if (!rijec.empty()) {
+                if (strchr("aeiouAEIOU", rijec[0]) != nullptr) {
+                    vektorFinal.replace(i - rijec.length(), rijec.length(), rijec + dodatakSamoglasnik);
+                    i += dodatakSamoglasnik.length();
+                }
+                else {
+                    vektorFinal.replace(i - rijec.length(), rijec.length(), rijec.substr(1) + rijec[0] + dodatakSuglasnik);
+                    i += dodatakSuglasnik.length();
+                }
+                rijec.clear();
+            }
         }
     }
-
-    cout << "Izmijenjeni string: " << tempVektor << endl;
+    cout << "Prevedena recenica: " << vektorFinal;
 }
 
 int main() {
     vector<string> vektor;
     int n;
 
-    cout << "Unesite broj rečenica" << endl;
+    cout << "Unesi broj recenica" << endl;
     cin >> n;
-    cin.ignore();
 
-    prevodi(vektor, n);
-
+    prevodenje(vektor, n);
+    
     return 0;
 }
